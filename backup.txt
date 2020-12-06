@@ -1,0 +1,113 @@
+
+//html elements
+const mainContainer = document.getElementById('main-container');
+const titleContainer = document.getElementById('title-container');
+const sections = mainContainer.childNodes;
+const startBtn = document.getElementById('start-btn');
+
+
+//game global vars
+const COLORS = ['black', 'blue', 'red', 'green', 'yellow'];
+const COMMENTS = [
+  'good memory!',
+  'genius!',
+  'champion!',
+  'elephant!',
+  'wooow!',
+  'nice!',
+  'amazing!',
+];
+let lvl = 1;
+let questionsLeft;
+
+
+
+
+let ui= {
+  
+}
+
+
+
+
+
+
+
+
+//functions
+const randomInt = (min, max) => {
+  //genrate random number.
+  return Math.floor(Math.random() * (max - min + 1) + min);
+};
+
+const generateComment = () => {
+  //genrate random win comment.
+  return COMMENTS[randomInt(0, COMMENTS.length - 1)];
+};
+
+const wrongAnswer = () => {
+  //wrong answer -> render fail msg -> reduce lvl and start new round after set time out.
+  mainContainer.innerHTML = `<span class='red'><span class='big-letters'>wrong answer!</span><br><br> back to lvl ${
+    lvl === 2 ? lvl - 1 : lvl - 2
+  } </span>`;
+  lvl !== 2 ? (lvl -= 2) : lvl--;
+  setTimeout(() => {
+    startRound();
+  }, 2000);
+};
+
+const generateOptions = (section) => {
+  const currentSection = sections[section];
+  const rightAnswer = () => {
+    wonGame = true;
+    currentSection.innerHTML = generateComment();
+    questionsLeft--;
+    if (questionsLeft === 0) {
+      mainContainer.innerHTML = `<span class='green'><span class='big-letters'>good job!</span><br><br> press start for round ${lvl}</span> `;
+      titleContainer.innerHTML = '';
+      titleContainer.appendChild(startBtn);
+      startBtn.style.display = 'block';
+    }
+  };
+  for (color of COLORS) {
+    let colorBtn = document.createElement('button');
+    colorBtn.setAttribute(`class`, `answer-cube`);
+    colorBtn.style.backgroundColor = color;
+    currentSection.appendChild(colorBtn);
+    colorBtn.addEventListener(
+      'click',
+      currentSection.style.backgroundColor === color ? rightAnswer : wrongAnswer
+    );
+  }
+};
+
+const questionMode = () => {
+  questionsLeft = sections.length;
+  for (section = 0; section < sections.length; section++) {
+    generateOptions(section);
+    sections[section].style.backgroundColor = 'transparent';
+  }
+};
+
+const generateLvl = (cubesAmount) => {
+  for (i = 0; i < cubesAmount; i++) {
+    const randomNum = randomInt(0, COLORS.length - 1);
+    let cube = document.createElement('div');
+    cube.style.backgroundColor = `${COLORS[randomNum]}`;
+    mainContainer.appendChild(cube);
+  }
+};
+mainContainer.innerHTML =
+  'welcome. please follow the color and recall which is where. start game when ready.';
+const startRound = () => {
+  mainContainer.innerHTML = '';
+  startBtn.style.display = 'none';
+  titleContainer.innerHTML = `LVL ${lvl}`;
+  generateLvl(lvl);
+  lvl++;
+  setTimeout(() => {
+    questionMode();
+  }, 2000);
+};
+
+startBtn.addEventListener('click', startRound);
