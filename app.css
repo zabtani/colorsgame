@@ -1,48 +1,81 @@
 body {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: column;
+  font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   margin: 0;
   background-color: rgb(253, 243, 211);
 }
-#title-container {
-  border-radius: 1%;
-  width: 95%;
-  margin: 2%;
-  justify-content: center;
-  background: linear-gradient(
-    to left,
-    rgb(253, 243, 211),
-    rgba(255, 255, 255, 0.747)
-  );
-
-  display: flex;
-}
-.green {
-  font-size: 45px;
-  color: green;
-}
-.red {
-  font-size: 45px;
-  color: red;
-}
-.big-letters {
-  font-size: 100px;
-}
-.btn {
+#btns-container {
+  padding: 4%;
   margin: 1%;
-  width: 150px;
-  height: 40px;
-  border: 2px solid black;
 }
+/*start button*/
+.button {
+  width: 175px;
+  height: 80px;
+  margin: 4%;
+  text-align: center;
+  font-size: 15px;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 0px 0px 15px hsl(330, 80%, 50%),
+    0px 10px 0px 15px hsl(330, 80%, 40%), 0px 20px 20px 15px #0003;
+  cursor: pointer;
+  border-radius: 100px 30px 100px 30px;
+  animation: 0.8s morph ease infinite;
+}
+
+.button p {
+  margin-top: 20px;
+  transform: rotate(-3deg);
+}
+
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.747);
+  font-weight: bold;
+}
+
+.button:hover p {
+  animation: 0.8s rot ease infinite;
+}
+
+@keyframes morph {
+  0% {
+    border-radius: 100px 30px 100px 30px;
+  }
+  50% {
+    border-radius: 30px 100px 30px 100px;
+  }
+  100% {
+    border-radius: 100px 30px 100px 30px;
+  }
+}
+
+@keyframes rot {
+  0% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+  100% {
+    transform: rotate(-3deg);
+  }
+}
+
+/*container game name title/lvl title / startbtn*/
+#title-container {
+  margin-top: 2%;
+  font-size: 200%;
+  border-radius: 1%;
+  background-color: azure;
+}
+/* main game display container */
 #main-container {
   border-radius: 1%;
-
-  background: linear-gradient(
-    to right,
-    rgb(253, 243, 211),
-    rgba(255, 255, 255, 0.747)
-  );
   flex-wrap: wrap;
-
   display: flex;
   justify-content: center;
   margin: auto;
@@ -50,21 +83,44 @@ body {
   height: auto;
   margin-top: 2%;
 }
-#title-container {
-  font-size: 40px;
-  font-weight: bold;
-  color: blue;
-}
-#main-container > div {
+/* main game entitys created by DOM (sections) */
+.section {
   border-radius: 100%;
   display: flex;
   flex-direction: row;
   width: 150px;
   height: 150px;
-  margin: 2%;
+  margin: 3%;
+}
+.animated {
+  animation: square-to-circle 2.5s infinite cubic-bezier(1, 0.015, 0.295, 1.225)
+    alternate-reverse;
+}
+@keyframes square-to-circle {
+  0% {
+    border-radius: 0 0 0 0;
+    transform: rotate(45deg);
+  }
+  25% {
+    border-radius: 50% 0 0 0;
+    transform: rotate(135deg);
+  }
+  50% {
+    border-radius: 50% 50% 0 0;
+    transform: rotate(180deg);
+  }
+  75% {
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(315deg);
+  }
+  100% {
+    border-radius: 50%;
+    transform: rotate(404deg);
+  }
 }
 
-.answer-cube {
+/*color option inside a section*/
+#main-container > div > button {
   border: none;
   border-radius: 100%;
   margin: 1%;

@@ -1,49 +1,52 @@
-const mainContainer = document.getElementById('main-container');
-const titleContainer = document.getElementById('title-container');
-const sections = mainContainer.childNodes;
-const startBtn = document.getElementById('start-btn');
-
-const UI = {
-  wrongMSG: () => {
-    mainContainer.innerHTML = `wrong answer! back to LVL ${LVL}`;
-  },
-  successMSG: () => {
-    mainContainer.innerHTML = `good job! press start for round ${LVL}`;
+const ui = {
+  inRoundView: (coloredLevelTitle) => {
+    mainContainer.innerHTML = '';
+    btnsContainer.style.display = 'none';
+    titleContainer.innerHTML = coloredLevelTitle;
+    titleContainer.style.color = 'black';
   },
 
-  welcomeMSG: () => {
+  lostRoundView: () => {
+    titleContainer.innerHTML = `LOST ROUND `;
+    titleContainer.style.color = 'red';
+    btnsContainer.style.display = 'none';
+    mainContainer.innerHTML = `wrong answer! back to lvl ${engine.lvl}`;
+  },
+  wonRoundView: () => {
+    titleContainer.innerHTML = 'winner!';
+    titleContainer.style.color = 'green';
+    btnsContainer.style.display = 'block';
+    mainContainer.innerHTML = `good job! press start for round ${engine.lvl}`;
+  },
+  changeGameNameColors: (coloredGameName) => {
+    titleContainer.innerHTML = coloredGameName;
+  },
+  welcomeView: () => {
     mainContainer.innerHTML =
       'welcome. please follow the colors and recall which is where. start game when ready.';
   },
-
-  titleOnLvl: () => {
-    mainContainer.innerHTML = '';
-    startBtn.style.display = 'none';
-    titleContainer.innerHTML = `LVL ${LVL}`;
-  },
-  titleOnStart: () => {
-    titleContainer.innerHTML = '';
-    titleContainer.appendChild(startBtn);
-    startBtn.style.display = 'block';
-  },
-  sectionSolved: (compliment, section) => {
-    section.innerHTML = compliment;
+  createSection: (randomColor) => {
+    let section = document.createElement('div');
+    section.classList.add('animated');
+    section.classList.add('section');
+    section.style.backgroundColor = randomColor;
+    mainContainer.appendChild(section);
   },
 
   createSectionOptionBtn: (section, OptionalColor) => {
     const colorBtn = document.createElement('button');
-    colorBtn.setAttribute(`class`, `answer-cube`);
+    colorBtn.classList.add('answer-cube');
+
     colorBtn.style.backgroundColor = OptionalColor;
     section.appendChild(colorBtn);
     return colorBtn;
   },
 
-  createSection: (randomColor) => {
-    const section = document.createElement('div');
-    section.style.backgroundColor = randomColor;
-    mainContainer.appendChild(section);
-  },
   hideSectionColor: (section) => {
+    section.classList.remove('animated');
     section.style.backgroundColor = 'transparent';
+  },
+  sectionSolved: (compliment, section) => {
+    section.innerHTML = compliment;
   },
 };
