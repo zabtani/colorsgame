@@ -1,9 +1,9 @@
 const ui = {
-  btnInErr: () => {
+  displayErr: () => {
     startBtn.textContent = `please enter name`;
     startBtn.style.color = 'red';
   },
-  btnOutErr: () => {
+  removeErr: () => {
     startBtn.textContent = `start game!`;
     startBtn.style.color = 'white';
   },

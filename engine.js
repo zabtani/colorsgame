@@ -165,9 +165,9 @@ startBtn.addEventListener('click', () => {
   if (engine.nameIsValid()) {
     engine.startRound(engine.player_input.value);
   } else {
-    ui.btnInErr(engine.player_input.value);
+    ui.displayErr(engine.player_input.value);
     setTimeout(() => {
-      ui.btnOutErr();
+      ui.removeErr();
     }, 1000);
   }
 });
