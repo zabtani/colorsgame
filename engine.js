@@ -1,9 +1,11 @@
 //GLOBALS
+const playerInput = document.getElementById('player-name-input');
 const mainContainer = document.getElementById('main-container');
 const titleContainer = document.getElementById('title-container');
 const btnsContainer = document.getElementById('btns-container');
 const sections = document.getElementsByClassName('section');
 const startBtn = document.getElementById('start-btn');
+const backBtn = document.getElementById('back-btn');
 const GAME_NAME = 'colors game';
 const LVL_TITLE = `Level `;
 const OPTIONAL_COLORS = ['black', 'blue', 'red', 'green', 'yellow'];
@@ -18,6 +20,8 @@ const COMPLIMENTS = [
   'pro!',
 ];
 
+const PLAYERS_RECORED = [];
+
 //GAME engine
 const engine = {
   game_name: GAME_NAME,
@@ -25,9 +29,10 @@ const engine = {
   optional_colors: OPTIONAL_COLORS,
   commpliments: COMPLIMENTS,
   gameNameInterval: '',
-  lvl_unsolved: 0,
+  unsolved_sections: 0,
   lvl: 1,
   just_entered: true,
+  player_input: playerInput,
   randomInt: (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
   },
@@ -52,9 +57,18 @@ const engine = {
     }
     return coloredName;
   },
+  nameIsValid: () => {
+    if (engine.player_input.value) {
+      return true;
+    } else {
+      return false;
+    }
+  },
   welcome: () => {
-    startBtn.addEventListener('click', engine.startRound);
+    engine.just_entered = true;
+    engine.lvl = 1;
     ui.welcomeView();
+
     gameName = engine.colorString(engine.game_name);
     ui.changeGameNameColors(gameName);
     engine.gameNameInterval = setInterval(() => {
@@ -68,13 +82,20 @@ const engine = {
     ];
   },
   lostlvl: () => {
-    if (engine.lvl > 1) {
-      engine.lvl--;
+    PLAYERS_RECORED.push({ name: engine.player_name, score: engine.lvl });
+    engine.lvl = 1;
+    const recoredList = engine.generateScores(PLAYERS_RECORED);
+    ui.lostRoundView(recoredList);
+    backBtn.addEventListener('click', engine.welcome);
+  },
+
+  generateScores: (recoredArr) => {
+    let recoredList = '<ul>';
+    for (recored of recoredArr) {
+      recoredList += `<li>name: ${recored.name} | score:${recored.score} </li>`;
     }
-    ui.lostRoundView();
-    setTimeout(() => {
-      engine.startRound();
-    }, 2000);
+    recoredList += '</ul>';
+    return recoredList;
   },
 
   wonlvl: () => {
@@ -85,8 +106,8 @@ const engine = {
   rightAnswer: (section) => {
     const commpliment = engine.generateCompliment();
     ui.sectionSolved(commpliment, section);
-    engine.lvl_unsolved--;
-    if (engine.lvl_unsolved === 0) {
+    engine.unsolved_sections--;
+    if (engine.unsolved_sections === 0) {
       engine.wonlvl();
     }
   },
@@ -105,19 +126,21 @@ const engine = {
   },
 
   hideSections: () => {
-    for (section = 0; section < sections.length; section++) {
+    for (section = 0; section < engine.lvl; section++) {
       engine.renderAnswerBtns(sections[section]);
       ui.hideSectionColor(sections[section]);
     }
   },
 
-  startRound: () => {
+  startRound: (playerInputValue) => {
+    engine.player_name = playerInputValue;
     if (engine.just_entered) {
       clearInterval(engine.gameNameInterval);
       engine.just_entered = false;
     }
+    console.log('srrtrnd');
     engine.buildSections();
-    engine.lvl_unsolved = sections.length;
+    engine.unsolved_sections = sections.length;
     setTimeout(() => {
       engine.hideSections();
     }, 2500);
@@ -136,3 +159,15 @@ const engine = {
 if (engine.just_entered) {
   engine.welcome();
 }
+
+startBtn.addEventListener('click', () => {
+  console.log('wel');
+  if (engine.nameIsValid()) {
+    engine.startRound(engine.player_input.value);
+  } else {
+    ui.btnInErr(engine.player_input.value);
+    setTimeout(() => {
+      ui.btnOutErr();
+    }, 1000);
+  }
+});

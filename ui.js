@@ -1,16 +1,27 @@
 const ui = {
+  btnInErr: () => {
+    startBtn.textContent = `please enter name`;
+    startBtn.style.color = 'red';
+  },
+  btnOutErr: () => {
+    startBtn.textContent = `start game!`;
+    startBtn.style.color = 'white';
+  },
   inRoundView: (coloredLevelTitle) => {
-    mainContainer.innerHTML = '';
     btnsContainer.style.display = 'none';
+    playerInput.style.display = 'none';
+    mainContainer.innerHTML = '';
     titleContainer.innerHTML = coloredLevelTitle;
     titleContainer.style.color = 'black';
   },
 
-  lostRoundView: () => {
+  lostRoundView: (recoreds) => {
+    btnsContainer.style.display = 'block';
+    backBtn.style.display = 'block';
+    startBtn.style.display = 'none';
     titleContainer.innerHTML = `LOST ROUND `;
     titleContainer.style.color = 'red';
-    btnsContainer.style.display = 'none';
-    mainContainer.innerHTML = `wrong answer! back to lvl ${engine.lvl}`;
+    mainContainer.innerHTML = recoreds;
   },
   wonRoundView: () => {
     titleContainer.innerHTML = 'winner!';
@@ -18,12 +29,15 @@ const ui = {
     btnsContainer.style.display = 'block';
     mainContainer.innerHTML = `good job! press start for round ${engine.lvl}`;
   },
-  changeGameNameColors: (coloredGameName) => {
-    titleContainer.innerHTML = coloredGameName;
-  },
   welcomeView: () => {
+    playerInput.style.display = 'block';
+    startBtn.style.display = 'block';
+    backBtn.style.display = 'none';
     mainContainer.innerHTML =
       'welcome. please follow the colors and recall which is where. start game when ready.';
+  },
+  changeGameNameColors: (coloredGameName) => {
+    titleContainer.innerHTML = coloredGameName;
   },
   createSection: (randomColor) => {
     let section = document.createElement('div');
@@ -36,7 +50,6 @@ const ui = {
   createSectionOptionBtn: (section, OptionalColor) => {
     const colorBtn = document.createElement('button');
     colorBtn.classList.add('answer-cube');
-
     colorBtn.style.backgroundColor = OptionalColor;
     section.appendChild(colorBtn);
     return colorBtn;
